@@ -54,9 +54,9 @@ return 0;
 int probabilityDeath( int percent){
 if((rand()%100)<percent){
 totalDeathCount++;
- return 1;
+ return 0;
 }
-else return 0;
+else return 1;
 
 
 }
@@ -97,7 +97,7 @@ int j;
 for(i=0;i<worldSize;i++){
 
    for(j=0;j<worldSize;j++){
-	if(personMatrix[i][j].isInfected==1&&personMatrix[i][j].inCycle!=0){
+	if(personMatrix[i][j].isAlive==1&&personMatrix[i][j].isInfected==1&&personMatrix[i][j].inCycle!=0){
 	        if(j>0)personMatrix[i][j-1].isInfected=probabilityInfection(personMatrix[i][j-1],100-socialDistance);
 	        if(i>0)personMatrix[i-1][j].isInfected=probabilityInfection(personMatrix[i-1][j],100-socialDistance);
 	        if(j<worldSize-1)personMatrix[i][j+1].isInfected=probabilityInfection(personMatrix[i][j+1],100-socialDistance);
@@ -111,8 +111,24 @@ for(i=0;i<worldSize;i++){
 	
 }
 }
+int caseNumber=0;
+for(i=0;i<worldSize;i++){
 
-
+   for(j=0;j<worldSize;j++){
+ if(personMatrix[i][j].isInfected==1){
+caseNumber++;
+personMatrix[i][j].inCycle++;
+if(personMatrix[i][j].inCycle==4){
+personMatrix[i][j].isAlive=probabilityDeath(40);
+if(personMatrix[i][j].isAlive==1){
+personMatrix[i][j].isInfected=0;
+totalRecoveredCases++;
+}
+}
+}
+}
+}
+if(caseNumber>maxActiveCases)maxActiveCases++;
 }
 
 
@@ -153,6 +169,27 @@ for(j=0;j<10;j++){
 printf("%d",world[i][j].isInfected);
 }
 }
-printf("%d",totalInfections);
+cycle(world,90,10,7);
+cycle(world,90,10,7);
+cycle(world,90,10,7);
+cycle(world,90,10,7);
+cycle(world,90,10,7);
+cycle(world,90,10,7);
+for ( i=0;i<10;i++){
+printf("\n");
+for(j=0;j<10;j++){
+printf("%d",world[i][j].isAlive);
+}
+}
+for ( i=0;i<10;i++){
+printf("\n");
+for(j=0;j<10;j++){
+printf("%d",world[i][j].isInfected);
+}
+}
+printf("%d\n",totalInfections);
+printf("%d\n",maxActiveCases);
+printf("%d\n",totalDeathCount);
+printf("%d\n",totalRecoveredCases);
 }
 
