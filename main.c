@@ -10,6 +10,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int totalInfections=0;
+int totalDeathCount=0;
+int totalRecoveredCases=0;
+int maxActiveCases=0;
+int cycleCount=0;
+
 typedef struct person{
 
 int isInfected;
@@ -19,42 +25,80 @@ int isAlive;
 
 }person;
 
-person createPerson(int isInfected){
+person createPerson(){
 
 person x;
 
-x.isInfected=isInfected;
+x.isInfected=0;
 x.isAlive=1;
 return x;
 
 }
+int probabilityInfection(person a, int percent){
 
+if(a.isInfected==1){
+return 1;
+}
+else {
+if((rand()%100)<percent) {
+totalInfections++;
+return 1;
+}
+else{
+return 0;  
+}
+}
+}
+int probabilityDeath( int percent){
+if((rand()%100)<percent){
+totalDeathCount++;
+ return 1;
+}
+else return 0;
+
+
+}
 person **createWorld(int worldSize,int seed){
 int i;
 person   **personMatrix;
 personMatrix = calloc(worldSize,sizeof(person *));
-for (i=0; i<worldSize; ++i)
-   personMatrix[i] = calloc(worldSize,sizeof(person));
+for (i=0; i<worldSize; ++i) personMatrix[i] = calloc(worldSize,sizeof(person));
 
 
 int j;
-int random;
 srand(seed);
 for(i=0;i<worldSize;i++){
 	
    for(j=0;j<worldSize;j++){
-
-random=rand()%20;
-if(!random){
-personMatrix[i][j]=createPerson(1);
-}
-else{
-personMatrix[i][j]=createPerson(0);
-}
+personMatrix[i][j]=createPerson();
 }
 
 }	
+for (i=0;i<(worldSize*worldSize)/20;i++){
+personMatrix[rand()%worldSize][rand()%worldSize].isInfected=1;
+totalInfections++;
+}
+
 	return personMatrix;
+
+}
+void cycle(person **personMatrix,int socialDistance,int worldSize,int seed){
+printf("naps");
+srand(seed);
+
+int i;
+int j;
+for(i=0;i<worldSize;i++){
+
+   for(j=0;j<worldSize;j++){
+	if(personMatrix[i][j].isInfected==1){
+	personMatrix[i][j-1].isInfected=probabilityInfection(personMatrix[i][j-1],80);	
+
+}
+	
+}
+}
+
 
 }
 
@@ -78,7 +122,7 @@ int main( int argc, char *argv[] )  {
       
 
 person **world;
-world=createWorld(10,9);
+world=createWorld(10,7);
 int i=0;
 int j=0;
 for ( i=0;i<10;i++){
@@ -87,7 +131,15 @@ for(j=0;j<10;j++){
 printf("%d",world[i][j].isInfected);
 }
 }
+printf("%d",totalInfections);
 
-
+cycle(world,6,10,7);
+for ( i=0;i<10;i++){
+printf("\n");
+for(j=0;j<10;j++){
+printf("%d",world[i][j].isInfected);
+}
+}
+printf("%d",totalInfections);
 }
 
