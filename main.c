@@ -1,3 +1,4 @@
+
 /* Assignment 3, Covid-19 social distancing effect simulation
  * The main aim of this assigment is getting familiar with dynamic arrays and heap management. 
  *  
@@ -21,7 +22,7 @@ typedef struct person{
 int isInfected;
 
 int isAlive;
-
+int inCycle;
 
 }person;
 
@@ -31,6 +32,7 @@ person x;
 
 x.isInfected=0;
 x.isAlive=1;
+x.inCycle=0;
 return x;
 
 }
@@ -73,9 +75,14 @@ for(i=0;i<worldSize;i++){
 personMatrix[i][j]=createPerson();
 }
 
-}	
+}
+int a;
+int b;	
 for (i=0;i<(worldSize*worldSize)/20;i++){
-personMatrix[rand()%worldSize][rand()%worldSize].isInfected=1;
+a=rand()%worldSize;
+b=rand()%worldSize;
+personMatrix[a][b].isInfected=1;
+personMatrix[a][b].inCycle=1;
 totalInfections++;
 }
 
@@ -83,7 +90,6 @@ totalInfections++;
 
 }
 void cycle(person **personMatrix,int socialDistance,int worldSize,int seed){
-printf("naps");
 srand(seed);
 
 int i;
@@ -91,8 +97,15 @@ int j;
 for(i=0;i<worldSize;i++){
 
    for(j=0;j<worldSize;j++){
-	if(personMatrix[i][j].isInfected==1){
-	personMatrix[i][j-1].isInfected=probabilityInfection(personMatrix[i][j-1],80);	
+	if(personMatrix[i][j].isInfected==1&&personMatrix[i][j].inCycle!=0){
+	        if(j>0)personMatrix[i][j-1].isInfected=probabilityInfection(personMatrix[i][j-1],100-socialDistance);
+	        if(i>0)personMatrix[i-1][j].isInfected=probabilityInfection(personMatrix[i-1][j],100-socialDistance);
+	        if(j<worldSize-1)personMatrix[i][j+1].isInfected=probabilityInfection(personMatrix[i][j+1],100-socialDistance);
+	        if(i<worldSize-1)personMatrix[i+1][j].isInfected=probabilityInfection(personMatrix[i+1][j],100-socialDistance);
+	        if(i>0&&j>0)personMatrix[i-1][j-1].isInfected=probabilityInfection(personMatrix[i-1][j-1],100-socialDistance);
+	        if(j<worldSize-1&&i<worldSize-1)personMatrix[i+1][j+1].isInfected=probabilityInfection(personMatrix[i+1][j+1],100-socialDistance);
+	        if(j>0&&i<worldSize-1)personMatrix[i+1][j-1].isInfected=probabilityInfection(personMatrix[i+1][j-1],100-socialDistance);
+	        if(j<worldSize-1&&i>0)personMatrix[i-1][j+1].isInfected=probabilityInfection(personMatrix[i-1][j+1],100-socialDistance);	
 
 }
 	
@@ -133,7 +146,7 @@ printf("%d",world[i][j].isInfected);
 }
 printf("%d",totalInfections);
 
-cycle(world,6,10,7);
+cycle(world,90,10,7);
 for ( i=0;i<10;i++){
 printf("\n");
 for(j=0;j<10;j++){
