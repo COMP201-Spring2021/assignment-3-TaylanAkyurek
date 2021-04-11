@@ -23,7 +23,7 @@ int isInfected;
 
 int isAlive;
 int inCycle;
-
+int isImmune;
 }person;
 
 person createPerson(){
@@ -33,6 +33,7 @@ person x;
 x.isInfected=0;
 x.isAlive=1;
 x.inCycle=0;
+x.isImmune=0;
 return x;
 
 }
@@ -98,14 +99,14 @@ for(i=0;i<worldSize;i++){
 
    for(j=0;j<worldSize;j++){
 	if(personMatrix[i][j].isAlive==1&&personMatrix[i][j].isInfected==1&&personMatrix[i][j].inCycle!=0){
-	        if(j>0)personMatrix[i][j-1].isInfected=probabilityInfection(personMatrix[i][j-1],100-socialDistance);
-	        if(i>0)personMatrix[i-1][j].isInfected=probabilityInfection(personMatrix[i-1][j],100-socialDistance);
-	        if(j<worldSize-1)personMatrix[i][j+1].isInfected=probabilityInfection(personMatrix[i][j+1],100-socialDistance);
-	        if(i<worldSize-1)personMatrix[i+1][j].isInfected=probabilityInfection(personMatrix[i+1][j],100-socialDistance);
-	        if(i>0&&j>0)personMatrix[i-1][j-1].isInfected=probabilityInfection(personMatrix[i-1][j-1],100-socialDistance);
-	        if(j<worldSize-1&&i<worldSize-1)personMatrix[i+1][j+1].isInfected=probabilityInfection(personMatrix[i+1][j+1],100-socialDistance);
-	        if(j>0&&i<worldSize-1)personMatrix[i+1][j-1].isInfected=probabilityInfection(personMatrix[i+1][j-1],100-socialDistance);
-	        if(j<worldSize-1&&i>0)personMatrix[i-1][j+1].isInfected=probabilityInfection(personMatrix[i-1][j+1],100-socialDistance);	
+	        if(j>0&&personMatrix[i][j-1].isImmune==0)personMatrix[i][j-1].isInfected=probabilityInfection(personMatrix[i][j-1],100-socialDistance);
+	        if(i>0&&personMatrix[i-1][j].isImmune==0)personMatrix[i-1][j].isInfected=probabilityInfection(personMatrix[i-1][j],100-socialDistance);
+	        if(j<worldSize-1&&personMatrix[i][j+1].isImmune==0)personMatrix[i][j+1].isInfected=probabilityInfection(personMatrix[i][j+1],100-socialDistance);
+	        if(i<worldSize-1&&personMatrix[i+1][j].isImmune==0)personMatrix[i+1][j].isInfected=probabilityInfection(personMatrix[i+1][j],100-socialDistance);
+	        if(i>0&&j>0&&personMatrix[i-1][j-1].isImmune==0)personMatrix[i-1][j-1].isInfected=probabilityInfection(personMatrix[i-1][j-1],100-socialDistance);
+	        if(j<worldSize-1&&i<worldSize-1&&personMatrix[i+1][j+1].isImmune==0)personMatrix[i+1][j+1].isInfected=probabilityInfection(personMatrix[i+1][j+1],100-socialDistance);
+	        if(j>0&&i<worldSize-1&&personMatrix[i+1][j-1].isImmune==0)personMatrix[i+1][j-1].isInfected=probabilityInfection(personMatrix[i+1][j-1],100-socialDistance);
+	        if(j<worldSize-1&&i>0&&personMatrix[i-1][j+1].isImmune==0)personMatrix[i-1][j+1].isInfected=probabilityInfection(personMatrix[i-1][j+1],100-socialDistance);	
 
 }
 	
@@ -122,7 +123,12 @@ if(personMatrix[i][j].inCycle==4){
 personMatrix[i][j].isAlive=probabilityDeath(40);
 if(personMatrix[i][j].isAlive==1){
 personMatrix[i][j].isInfected=0;
+personMatrix[i][j].isImmune=1;
 totalRecoveredCases++;
+}
+else{
+personMatrix[i][j].isInfected=0;
+personMatrix[i][j].isImmune=1;
 }
 }
 }
@@ -130,7 +136,38 @@ totalRecoveredCases++;
 }
 if(caseNumber>maxActiveCases)maxActiveCases++;
 }
-
+void printArray(person **personMatrix,int worldSize){
+int i;
+int j;
+for ( i=0;i<worldSize;i++){
+printf("\n");
+for(j=0;j<worldSize;j++){
+printf("%d",personMatrix[i][j].isInfected);
+}
+}
+printf("\n");
+for ( i=0;i<worldSize;i++){
+printf("\n");
+for(j=0;j<worldSize;j++){
+printf("%d",personMatrix[i][j].isAlive);
+}
+}
+printf("\n");
+for ( i=0;i<worldSize;i++){
+printf("\n");
+for(j=0;j<worldSize;j++){
+printf("%d",personMatrix[i][j].isImmune);
+}
+}
+printf("\n");
+for ( i=0;i<worldSize;i++){
+printf("\n");
+for(j=0;j<worldSize;j++){
+printf("%d",personMatrix[i][j].inCycle);
+}
+}
+printf("\n %d %d %d %d",totalInfections,totalDeathCount,totalRecoveredCases,maxActiveCases,cycleCount);
+}
 
 int main( int argc, char *argv[] )  {
 
@@ -151,45 +188,20 @@ int main( int argc, char *argv[] )  {
       
 
 person **world;
-world=createWorld(10,7);
-int i=0;
-int j=0;
-for ( i=0;i<10;i++){
-printf("\n");
-for(j=0;j<10;j++){
-printf("%d",world[i][j].isInfected);
-}
-}
-printf("%d",totalInfections);
+world=createWorld(5,7);
+printArray(world,5);
 
-cycle(world,90,10,7);
-for ( i=0;i<10;i++){
-printf("\n");
-for(j=0;j<10;j++){
-printf("%d",world[i][j].isInfected);
-}
-}
-cycle(world,90,10,7);
-cycle(world,90,10,7);
-cycle(world,90,10,7);
-cycle(world,90,10,7);
-cycle(world,90,10,7);
-cycle(world,90,10,7);
-for ( i=0;i<10;i++){
-printf("\n");
-for(j=0;j<10;j++){
-printf("%d",world[i][j].isAlive);
-}
-}
-for ( i=0;i<10;i++){
-printf("\n");
-for(j=0;j<10;j++){
-printf("%d",world[i][j].isInfected);
-}
-}
-printf("%d\n",totalInfections);
-printf("%d\n",maxActiveCases);
-printf("%d\n",totalDeathCount);
-printf("%d\n",totalRecoveredCases);
+cycle(world,40,5,7);
+printArray(world,5);
+cycle(world,40,5,7);
+printArray(world,5);
+cycle(world,40,5,7);
+printArray(world,5);
+cycle(world,40,5,7);
+printArray(world,5);
+cycle(world,40,5,7);
+printArray(world,5);
+cycle(world,40,5,7);
+printArray(world,5);
 }
 
