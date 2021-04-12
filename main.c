@@ -82,7 +82,10 @@ int b;
 for (i=0;i<(worldSize*worldSize)/20;i++){
 a=rand()%worldSize;
 b=rand()%worldSize;
-personMatrix[a][b].isInfected=1;
+if(personMatrix[a][b].isInfected==0)personMatrix[a][b].isInfected=1;
+else{
+i--;
+}
 personMatrix[a][b].inCycle=1;
 totalInfections++;
 }
@@ -203,5 +206,12 @@ cycle(world,40,10,15);
 printArray(world,10);
 cycle(world,40,10,14);
 printArray(world,10);
+cycle(world,40,10,5);
+printArray(world,10);
+cycle(world,40,10,15);
+printArray(world,10);
+cycle(world,40,10,14);
+printArray(world,10);
+
 }
 
