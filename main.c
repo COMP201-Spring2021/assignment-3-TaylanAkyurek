@@ -134,7 +134,7 @@ personMatrix[i][j].isImmune=1;
 }
 }
 }
-if(caseNumber>maxActiveCases)maxActiveCases++;
+if(caseNumber>maxActiveCases)maxActiveCases=caseNumber;
 }
 void printArray(person **personMatrix,int worldSize){
 int i;
@@ -166,7 +166,7 @@ for(j=0;j<worldSize;j++){
 printf("%d",personMatrix[i][j].inCycle);
 }
 }
-printf("\n %d %d %d %d",totalInfections,totalDeathCount,totalRecoveredCases,maxActiveCases,cycleCount);
+printf("\n %d %d %d %d",totalInfections,totalDeathCount,totalRecoveredCases,maxActiveCases);
 }
 
 int main( int argc, char *argv[] )  {
@@ -188,20 +188,20 @@ int main( int argc, char *argv[] )  {
       
 
 person **world;
-world=createWorld(5,7);
-printArray(world,5);
+world=createWorld(10,9);
+printArray(world,10);
 
-cycle(world,40,5,7);
-printArray(world,5);
-cycle(world,40,5,7);
-printArray(world,5);
-cycle(world,40,5,7);
-printArray(world,5);
-cycle(world,40,5,7);
-printArray(world,5);
-cycle(world,40,5,7);
-printArray(world,5);
-cycle(world,40,5,7);
-printArray(world,5);
+cycle(world,40,10,9);
+printArray(world,10);
+cycle(world,40,10,11);
+printArray(world,10);
+cycle(world,40,10,13);
+printArray(world,10);
+cycle(world,40,10,5);
+printArray(world,10);
+cycle(world,40,10,15);
+printArray(world,10);
+cycle(world,40,10,14);
+printArray(world,10);
 }
 
