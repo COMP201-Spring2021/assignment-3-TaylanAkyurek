@@ -188,30 +188,39 @@ int main( int argc, char *argv[] )  {
    else {
       printf("Expected 4 arguments but only %d argument passed.\n", argc-1);
    }
-      
+int a=atoi(argv[1]); 
+int b=atoi(argv[2]);
+int c=atoi(argv[3]);
+int d=atoi(argv[4]);
+   
 
 person **world;
-world=createWorld(10,9);
-printArray(world,10);
+world=createWorld(a,d);
 
-cycle(world,40,10,9);
-printArray(world,10);
-cycle(world,40,10,11);
-printArray(world,10);
-cycle(world,40,10,13);
-printArray(world,10);
-cycle(world,40,10,5);
-printArray(world,10);
-cycle(world,40,10,15);
-printArray(world,10);
-cycle(world,40,10,14);
-printArray(world,10);
-cycle(world,40,10,5);
-printArray(world,10);
-cycle(world,40,10,15);
-printArray(world,10);
-cycle(world,40,10,14);
-printArray(world,10);
-
+FILE * fPointer;
+fPointer=fopen("CYCLENUM.txt","w");
+int i;
+int j;
+int k;
+for(k=0;k<c;k++){
+fprintf(fPointer,"\n");
+for ( i=0;i<a;i++){
+fprintf(fPointer,"\n");
+for(j=0;j<a;j++){
+if(world[i][j].isAlive==1){
+fprintf(fPointer,"%d ",world[i][j].isInfected);
 }
+else{
+fprintf(fPointer,"* ");
+}
+}
+}
+cycle(world,b,a,d);
+fprintf(fPointer,"\n");
+}
+fprintf(fPointer,"\n %d %d %d %d",totalInfections,totalDeathCount,totalRecoveredCases,maxActiveCases);
+
+fclose(fPointer);
+}
+
 
