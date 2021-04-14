@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 int totalInfections=0;
 int totalDeathCount=0;
 int totalRecoveredCases=0;
@@ -123,7 +123,7 @@ for(i=0;i<worldSize;i++){
 caseNumber++;
 personMatrix[i][j].inCycle++;
 if(personMatrix[i][j].inCycle==4){
-personMatrix[i][j].isAlive=probabilityDeath(40);
+personMatrix[i][j].isAlive=probabilityDeath(3);
 if(personMatrix[i][j].isAlive==1){
 personMatrix[i][j].isInfected=0;
 personMatrix[i][j].isImmune=1;
@@ -197,14 +197,16 @@ int d=atoi(argv[4]);
 person **world;
 world=createWorld(a,d);
 
-FILE * fPointer;
-fPointer=fopen("CYCLENUM.txt","w");
 int i;
+char cyc[11];
 int j;
 int k;
-for(k=0;k<c;k++){
-fprintf(fPointer,"\n");
-for ( i=0;i<a;i++){
+FILE * fPointer;
+for(k=1; k<c+1; k++){
+sprintf(cyc, "cycle%d",k);
+strcat(cyc,".txt");
+fPointer=fopen(cyc,"w");
+for (i=0;i<a;i++){
 fprintf(fPointer,"\n");
 for(j=0;j<a;j++){
 if(world[i][j].isAlive==1){
@@ -215,12 +217,11 @@ fprintf(fPointer,"* ");
 }
 }
 }
-cycle(world,b,a,d);
-fprintf(fPointer,"\n");
-}
 fprintf(fPointer,"\n %d %d %d %d",totalInfections,totalDeathCount,totalRecoveredCases,maxActiveCases);
 
-fclose(fPointer);
+cycle(world,b,a,d);
 }
+}
+
 
 
