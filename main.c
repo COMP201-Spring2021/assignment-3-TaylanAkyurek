@@ -198,7 +198,7 @@ person **world;
 world=createWorld(a,d);
 
 int i;
-char cyc[11];
+char cyc[13];
 int j;
 int k;
 FILE * fPointer;
@@ -218,7 +218,7 @@ fprintf(fPointer,"* ");
 }
 }
 fprintf(fPointer,"\n %d %d %d %d",totalInfections,totalDeathCount,totalRecoveredCases,maxActiveCases);
-
+fclose(fPointer);
 cycle(world,b,a,d);
 }
 }
